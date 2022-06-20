@@ -2,17 +2,14 @@
 {
     public class Course : BaseEntity
     {
-        private readonly List<StudentCourse> _students;
-
         private Course(string name)
         {
             Name = name;
-            _students = new();
+            Students = new();
         }
 
         public string Name { get; set; }
-        public IReadOnlyList<StudentCourse> Students => _students.AsReadOnly();
-
+        public List<StudentCourse> Students { get; set; }
 
         public static Course Create(string name)
         {
@@ -21,7 +18,7 @@
 
         public void AddStudent(int studentId)
         {
-            _students.Add(new StudentCourse(studentId));
+            Students.Add(new StudentCourse(studentId));
         }
 
         public void Delete()

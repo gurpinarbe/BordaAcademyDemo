@@ -20,7 +20,7 @@
 
         public void Update(string firstName, string lastName)
         {
-            FirstName=firstName;
+            FirstName = firstName;
             LastName = lastName;
         }
 

@@ -28,7 +28,11 @@ namespace Demo.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            Student student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            Student? student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
 
             return Ok(student);
         }
@@ -39,7 +43,8 @@ namespace Demo.Controllers
             Student student = Student.Create(request.FirstName, request.LastName);
 
             _demoContext.Students.Add(student);
-            _demoContext.SaveChanges();
+
+            await _demoContext.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Get), new { student.Id }, new { student.Id });
         }
@@ -48,11 +53,15 @@ namespace Demo.Controllers
         [Route("{id}/update")]
         public async Task<IActionResult> Update(int id, [FromBody] StudentRequest request)
         {
-            Student student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            Student? student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
             student.Update(request.FirstName, request.LastName);
 
-            _demoContext.Students.Update(student);
-            _demoContext.SaveChanges();
+            await _demoContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -61,10 +70,15 @@ namespace Demo.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Student student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            Student? student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
 
             _demoContext.Students.Remove(student);
-            _demoContext.SaveChanges();
+
+            await _demoContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -73,11 +87,15 @@ namespace Demo.Controllers
         [Route("{id}/soft")]
         public async Task<IActionResult> SoftDelete(int id)
         {
-            Student student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            Student? student = _demoContext.Students.FirstOrDefault(i => i.Id == id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
             student.Delete();
 
-            _demoContext.Students.Update(student);
-            _demoContext.SaveChanges();
+            await _demoContext.SaveChangesAsync();
 
             return NoContent();
         }

@@ -5,13 +5,23 @@ namespace Demo.Database
 {
     public class DemoContext : DbContext
     {
-        public DemoContext(DbContextOptions<DemoContext> options)
-                    : base(options)
+        private readonly IConfiguration _configuration;
+
+        public DemoContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Course> Courses { get; set; }
+        public DbSet<Student> Students => Set<Student>();
+        public DbSet<Course> Courses => Set<Course>();
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            optionsBuilder
+                .UseNpgsql(connectionString);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
